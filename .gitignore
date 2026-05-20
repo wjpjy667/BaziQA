@@ -28,6 +28,11 @@ venv/
 # Logs
 *.log
 
+# Project specific
+.playwright-mcp/
+roadmap-website/
+package.json
+
 # Temp
 tmp/
 temp/
