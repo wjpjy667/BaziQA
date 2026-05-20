@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潘某人 · 四柱八字命盘分析</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0e14;
+    --surface: #131820;
+    --surface2: #1a2030;
+    --border: #252d3a;
+    --gold: #c9a96e;
+    --gold-light: #e0c78a;
+    --text: #c8cdd5;
+    --text-dim: #8b919c;
+    --text-bright: #e8ecf2;
+    --water: #5b9bd5;
+    --fire: #d4734a;
+    --metal: #b8b07e;
+    --wood: #6ba87a;
+    --earth: #c49a5e;
+    --accent: #3b7dd8;
+    --danger: #c85640;
+    --safe: #5a9e6f;
+    --sidebar-w: 250px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== SIDEBAR NAV ===== */
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: #0d1117;
+    border-right: 1px solid var(--border);
+    z-index: 100;
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .sidebar-header .name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.2rem; color: var(--text-bright); font-weight: 700;
+  }
+  .sidebar-header .sub {
+    font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;
+  }
+  .sidebar-nav { flex: 1; padding: 12px 0; }
+  .sidebar-nav .group {
+    padding: 8px 20px 4px;
+    font-size: 0.68rem; color: var(--text-dim);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .sidebar-nav a {
+    display: block; padding: 8px 20px;
+    font-size: 0.88rem; color: var(--text-dim);
+    text-decoration: none; transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-nav a:hover, .sidebar-nav a.active {
+    color: var(--text-bright);
+    background: rgba(255,255,255,0.03);
+  }
+  .sidebar-nav a.active {
+    border-left-color: var(--gold);
+    color: var(--gold-light);
+  }
+  .sidebar-nav a.hot {
+    color: #e87a6a;
+    font-weight: 500;
+  }
+  .sidebar-nav a.hot::after {
+    content: " ●";
+    font-size: 0.45rem;
+    vertical-align: middle;
+  }
+  .sidebar-nav a.hot:hover, .sidebar-nav a.hot.active {
+    color: #f09080;
+  }
+  .sidebar-footer {
+    padding: 16px 20px; border-top: 1px solid var(--border);
+    font-size: 0.7rem; color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* ===== MOBILE TOP BAR ===== */
+  .topbar {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 52px; background: #0d1117;
+    border-bottom: 1px solid var(--border);
+    align-items: center; padding: 0 16px;
+  }
+  .topbar .name { font-family: 'Noto Serif SC', serif; font-size: 1rem; color: var(--text-bright); font-weight: 700; }
+  .topbar .menu-btn {
+    margin-left: auto; background: none; border: none; color: var(--text);
+    font-size: 1.4rem; cursor: pointer; padding: 6px; line-height: 1;
+  }
+
+  /* overlay */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 150;
+  }
+  .overlay.show { display: block; }
+
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ——— Hero ——— */
+  .hero {
+    text-align: center;
+    padding: 56px 20px 44px;
+    background: linear-gradient(180deg, #111922 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero .badge {
+    display: inline-block;
+    font-size: 0.8rem; letter-spacing: 0.15em;
+    color: var(--gold); border: 1px solid var(--gold);
+    padding: 4px 16px; border-radius: 100px; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.2rem; color: var(--text-bright);
+    font-weight: 700; letter-spacing: 0.04em; margin-bottom: 8px;
+  }
+  .hero .subtitle { color: var(--text-dim); font-size: 1rem; font-weight: 300; }
+
+  /* ——— Section ——— */
+  section {
+    padding: 44px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  .section-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  }
+  .section-head .icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; flex-shrink: 0;
+  }
+  .section-head h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.35rem; color: var(--text-bright);
+    font-weight: 700; letter-spacing: 0.03em;
+  }
+  .section-head .tag {
+    font-size: 0.7rem; color: var(--text-dim);
+    font-weight: 400; margin-left: auto;
+  }
+
+  /* ——— Info Grid ——— */
+  .info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .info-grid .item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .info-grid .item .label {
+    font-size: 0.75rem; color: var(--text-dim);
+    letter-spacing: 0.06em; margin-bottom: 2px;
+  }
+  .info-grid .item .value {
+    font-size: 1rem; color: var(--text-bright); font-weight: 500;
+  }
+
+  /* ——— Pillar Table ——— */
+  .pillar-table {
+    width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem;
+  }
+  .pillar-table th {
+    background: var(--surface2); color: var(--text-dim);
+    font-weight: 500; font-size: 0.78rem; letter-spacing: 0.08em;
+    padding: 12px 8px; border: 1px solid var(--border);
+  }
+  .pillar-table td {
+    padding: 13px 8px; border: 1px solid var(--border);
+    color: var(--text-bright); font-weight: 500;
+  }
+  .pillar-table .stem { font-size: 1.25rem; font-weight: 700; font-family: 'Noto Serif SC', serif; }
+  .pillar-table .branch { font-size: 1.05rem; }
+  .pillar-table .hidden { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+  .pillar-table .god { font-size: 0.85rem; }
+  .pillar-table .day-master {
+    background: linear-gradient(135deg, #1a2540 0%, #152030 100%);
+    position: relative;
+  }
+  .pillar-table .day-master::after {
+    content: "日主"; position: absolute; top: -10px; left: 50%;
+    transform: translateX(-50%); background: var(--accent); color: #fff;
+    font-size: 0.65rem; padding: 1px 10px; border-radius: 100px; white-space: nowrap;
+  }
+
+  /* ——— Card ——— */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px; margin-bottom: 16px;
+  }
+  .card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem; color: var(--text-bright); margin-bottom: 12px; font-weight: 600;
+  }
+  .card p { margin-bottom: 10px; color: var(--text); font-size: 0.95rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ——— Highlight Box ——— */
+  .highlight {
+    background: linear-gradient(135deg, #141e2a 0%, #1a2230 100%);
+    border-left: 3px solid var(--water);
+    padding: 18px 20px; border-radius: 0 10px 10px 0;
+    margin: 16px 0; font-size: 0.95rem; color: var(--text-bright);
+  }
+  .highlight.warn  { border-left-color: var(--fire);  background: linear-gradient(135deg, #201914 0%, #221b18 100%); }
+  .highlight.gold  { border-left-color: var(--gold);  background: linear-gradient(135deg, #1a1812 0%, #1e1a14 100%); }
+  .highlight.green { border-left-color: var(--safe);  background: linear-gradient(135deg, #121e18 0%, #16221c 100%); }
+  .highlight .src { display: block; font-size: 0.72rem; color: var(--text-dim); margin-top: 8px; }
+
+  /* ——— Timeline ——— */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 12px; top: 4px; bottom: 4px;
+    width: 1px; background: var(--border);
+  }
+  .timeline .stage { position: relative; margin-bottom: 28px; }
+  .timeline .stage:last-child { margin-bottom: 0; }
+  .timeline .dot {
+    position: absolute; left: -22px; top: 4px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--border); border: 2px solid var(--bg);
+  }
+  .timeline .stage.current .dot {
+    background: var(--accent); box-shadow: 0 0 12px rgba(59,125,216,0.5);
+  }
+  .timeline .stage h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.05rem; color: var(--text-bright); font-weight: 600;
+  }
+  .timeline .stage .meta { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
+  .timeline .stage .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .timeline .stage .chip {
+    font-size: 0.72rem; padding: 3px 10px; border-radius: 100px;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
+  }
+
+  /* ——— Bars ——— */
+  .bar-group { margin-bottom: 12px; }
+  .bar-group .bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
+  .bar-group .bar-label span:last-child { color: var(--text-dim); font-size: 0.78rem; }
+  .bar-track { height: 8px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 100px; }
+  .bar-fill.water-bg { background: linear-gradient(90deg, #3b7dd8, #5b9bd5); }
+  .bar-fill.fire-bg  { background: linear-gradient(90deg, #c85640, #d4734a); }
+  .bar-fill.metal-bg { background: linear-gradient(90deg, #9a9468, #b8b07e); }
+  .bar-fill.earth-bg { background: linear-gradient(90deg, #a07840, #c49a5e); }
+  .bar-fill.wood-bg  { background: linear-gradient(90deg, #4a7a58, #6ba87a); }
+
+  /* ——— Two Col ——— */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ——— Do/Don't ——— */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .do-card, .dont-card { border-radius: 12px; padding: 18px; border: 1px solid var(--border); }
+  .do-card  { background: linear-gradient(135deg, #121e18 0%, #16221c 100%); border-left: 3px solid var(--safe); }
+  .dont-card { background: linear-gradient(135deg, #1e1414 0%, #221818 100%); border-left: 3px solid var(--danger); }
+  .do-card h4  { color: var(--safe);  font-size: 0.9rem; margin-bottom: 8px; }
+  .dont-card h4{ color: var(--danger); font-size: 0.9rem; margin-bottom: 8px; }
+  .do-card ul, .dont-card ul { list-style: none; padding: 0; }
+  .do-card li, .dont-card li { font-size: 0.88rem; padding: 3px 0; color: var(--text); }
+  .do-card li::before  { content: "✓ "; color: var(--safe); }
+  .dont-card li::before{ content: "✗ "; color: var(--danger); }
+
+  /* ——— Quote ——— */
+  blockquote {
+    border-left: 2px solid var(--gold);
+    padding: 12px 18px; margin: 20px 0;
+    background: rgba(201,169,110,0.04);
+    border-radius: 0 8px 8px 0;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.05rem; color: var(--gold-light); font-style: italic;
+  }
+
+  /* ——— Family ——— */
+  .family-grid { display: grid; gap: 12px; }
+  .family-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .family-card h3 { font-family: 'Noto Serif SC', serif; font-size: 1.05rem; color: var(--text-bright); margin-bottom: 10px; }
+
+  /* ——— Checklist ——— */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px; font-size: 0.93rem;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist .num {
+    width: 24px; height: 24px; background: var(--surface2);
+    border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; font-size: 0.75rem;
+    color: var(--text-dim); flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ——— Star Rating ——— */
+  .stars { color: var(--gold); letter-spacing: 2px; }
+
+  /* ——— Table ——— */
+  .info-table {
+    width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 12px 0;
+  }
+  .info-table th {
+    text-align: left; padding: 10px 14px; background: var(--surface2);
+    color: var(--text-dim); font-size: 0.75rem; letter-spacing: 0.06em;
+    font-weight: 500; border: 1px solid var(--border);
+  }
+  .info-table td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text); }
+
+  /* ——— Footer ——— */
+  footer {
+    text-align: center; padding: 48px 20px 40px;
+    color: var(--text-dim); font-size: 0.8rem;
+    border-top: 1px solid var(--border); margin-top: 20px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .sidebar.open {
+      display: flex; position: fixed; top: 0; left: 0; bottom: 0; width: 260px;
+      z-index: 300; box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+    .topbar { display: flex; }
+    .main { margin-left: 0; padding-top: 52px; }
+    .hero { padding: 40px 16px 32px; }
+    .hero h1 { font-size: 1.6rem; }
+  }
+
+  @media (max-width: 600px) {
+    .pillar-table { font-size: 0.8rem; }
+    .pillar-table .stem { font-size: 1rem; }
+    .info-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .do-dont { grid-template-columns: 1fr; }
+    section { padding: 32px 0; }
+    .section-head h2 { font-size: 1.15rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="name">潘某人</div>
+    <div class="sub">壬午 · 己酉 · 壬午 · 丙午</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="group">命盘总览</div>
+    <a href="#basic-info">基本信息</a>
+    <a href="#pillars">四柱命盘</a>
+    <a href="#day-master">日主分析</a>
+    <a href="#ten-gods">十神全盘</a>
+    <a href="#five-elements">五行与格局</a>
+    <a href="#talent" class="hot">本命天赋</a>
+
+    <div class="group">运势规划</div>
+    <a href="#dayun">大运排列</a>
+    <a href="#life-stages" class="hot">人生阶段规划</a>
+    <a href="#current-year" class="hot">2026 流年</a>
+
+    <div class="group">事业财富</div>
+    <a href="#career" class="hot">事业方向</a>
+    <a href="#certificates" class="hot">考证规划</a>
+    <a href="#wealth">财富格局</a>
+
+    <div class="group">身心调养</div>
+    <a href="#health">身体健康</a>
+    <a href="#habits">生活习惯</a>
+    <a href="#diet">饮食体系</a>
+    <a href="#accessories">配饰穿着</a>
+    <a href="#internal-friction" class="hot">内耗管理</a>
+
+    <div class="group">人生六亲</div>
+    <a href="#relationships">感情婚姻</a>
+    <a href="#metaphysics">玄学天赋</a>
+    <a href="#family">家庭建议</a>
+
+    <div class="group">总结</div>
+    <a href="#pitfalls" class="hot">避坑指南</a>
+    <a href="#life-curve">人生曲线</a>
+  </nav>
+  <div class="sidebar-footer">命理分析仅供参考<br>人生在于自身努力</div>
+</aside>
+
+<!-- ═══════════ MOBILE TOP BAR ═══════════ -->
+<div class="topbar">
+  <span class="name">潘某人 · 八字命盘</span>
+  <button class="menu-btn" id="menuBtn" aria-label="菜单">☰</button>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="badge">四柱八字命盘</div>
+  <h1>潘某人</h1>
+  <p class="subtitle">壬午年 · 己酉月 · 壬午日 · 丙午时</p>
+</header>
+
+<div class="container">
+
+<!-- ═══ 基本信息 ═══ -->
+<section id="basic-info">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(201,169,110,0.12);color:var(--gold);">📋</div>
+    <h2>基本信息</h2>
+  </div>
+  <div class="info-grid">
+    <div class="item"><div class="label">姓名</div><div class="value">潘某人</div></div>
+    <div class="item"><div class="label">性别</div><div class="value">男</div></div>
+    <div class="item"><div class="label">阳历生日</div><div class="value">2002 年 9 月 11 日</div></div>
+    <div class="item"><div class="label">农历生日</div><div class="value">壬午年八月初五</div></div>
+    <div class="item"><div class="label">出生时辰</div><div class="value">午时（12:00）</div></div>
+    <div class="item"><div class="label">出生地</div><div class="value">福建省莆田市</div></div>
+    <div class="item"><div class="label">排盘日期</div><div class="value">2026 年 5 月 20 日</div></div>
+    <div class="item"><div class="label">当前年龄</div><div class="value">24 周岁（虚岁 25）</div></div>
+  </div>
+</section>
+
+<!-- ═══ 四柱命盘 ═══ -->
+<section id="pillars">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(91,155,213,0.12);color:var(--water);">🪐</div>
+    <h2>四柱命盘</h2>
+    <span class="tag">日主 · 壬水</span>
+  </div>
+  <div style="overflow-x:auto;">
+  <table class="pillar-table">
+    <thead><tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr></thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--text-dim);font-size:0.78rem;">天干</td>
+        <td><span class="stem" style="color:var(--water);">壬</span></td>
+        <td><span class="stem" style="color:var(--earth);">己</span></td>
+        <td class="day-master"><span class="stem" style="color:var(--water);">壬</span></td>
+        <td><span class="stem" style="color:var(--fire);">丙</span></td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-dim);font-size:0.78rem;">地支</td>
+        <td><span class="branch" style="color:var(--fire);">午</span></td>
+        <td><span class="branch" style="color:var(--metal);">酉</span></td>
+        <td class="day-master"><span class="branch" style="color:var(--fire);">午</span></td>
+        <td><span class="branch" style="color:var(--fire);">午</span></td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-dim);font-size:0.78rem;">十神</td>
+        <td class="god">比肩</td><td class="god">正官</td>
+        <td class="god" style="color:var(--accent);">— 日主 —</td>
+        <td class="god">偏财</td>
+      </tr>
+      <tr>
+        <td style="color:var(--text-dim);font-size:0.78rem;">藏干</td>
+        <td class="hidden">丁火（正财）<br>己土（正官）</td>
+        <td class="hidden">辛金（正印）</td>
+        <td class="hidden">丁火（正财）<br>己土（正官）</td>
+        <td class="hidden">丁火（正财）<br>己土（正官）</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ═══ 日主分析 ═══ -->
+<section id="day-master">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(91,155,213,0.12);color:var(--water);">💧</div>
+    <h2>日主分析</h2>
+    <span class="tag">壬水 · 身弱</span>
+  </div>
+
+  <div class="card">
+    <h3>壬水生于酉月（仲秋）</h3>
+    <p><strong>得令？</strong> 酉月为金，金能生水，壬水得月令相生、有源头。但酉为壬水"沐浴"之地，非旺地，只算 <strong>得生而非得令</strong>。</p>
+    <p><strong>得地？</strong> 地支无亥、子等水根，反而年、日、时三柱全是午火，壬水在地支 <strong>无根无位</strong>。</p>
+    <p><strong>得势？</strong> 年干壬水比肩帮身，但自坐午火受克，自身难保；时干丙火偏财耗身。天干帮身之力有限。</p>
+  </div>
+
+  <div class="highlight warn">
+    <strong>判定：身弱</strong><br>
+    壬水虽有月支酉金正印相生，但地支三午成势、丙火透干，烈焰煎水。全靠酉金一柱支撑，是为 <strong>财多身弱</strong>——财星过旺，日主难担。
+    <span class="src">——《滴天髓》："壬水通河，能泄金气。" 酉月金白水清本是佳格，奈何三午烈火熬煎，水源虽存而流竭。</span>
+  </div>
+</section>
+
+<!-- ═══ 十神全盘 ═══ -->
+<section id="ten-gods">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(200,169,110,0.12);color:var(--gold);">⚡</div>
+    <h2>十神全盘</h2>
+  </div>
+  <table class="info-table">
+    <thead><tr><th>十神</th><th>位置</th><th>力量</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td>比肩</td><td>年干壬</td><td>★★</td><td>兄弟朋友助力，但坐午火受制，助力有限</td></tr>
+      <tr><td>正官</td><td>月干己</td><td>★★★</td><td>自律、责任感，官星透干为人正派</td></tr>
+      <tr><td style="color:var(--accent);">正印</td><td style="color:var(--accent);">月支辛金</td><td style="color:var(--accent);">★★★★</td><td style="color:var(--accent);">学业根基、贵人、母亲——全局最关键用神</td></tr>
+      <tr><td>偏财</td><td>时干丙</td><td>★★★★</td><td>偏业之财、灵活收入，透干有力</td></tr>
+      <tr><td>正财</td><td>地支三午丁火</td><td>★★★★★</td><td>稳定财源、妻星，极旺——财多身弱之根源</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ 五行与格局 ═══ -->
+<section id="five-elements">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(196,154,94,0.12);color:var(--earth);">☯</div>
+    <h2>五行平衡与格局</h2>
+    <span class="tag">正印格</span>
+  </div>
+
+  <div class="bar-group"><div class="bar-label"><span>🔥 火</span><span>极旺</span></div><div class="bar-track"><div class="bar-fill fire-bg" style="width:95%;"></div></div></div>
+  <div class="bar-group"><div class="bar-label"><span>⛰️ 土</span><span>偏旺</span></div><div class="bar-track"><div class="bar-fill earth-bg" style="width:65%;"></div></div></div>
+  <div class="bar-group"><div class="bar-label"><span>⚪ 金</span><span>偏弱</span></div><div class="bar-track"><div class="bar-fill metal-bg" style="width:30%;"></div></div></div>
+  <div class="bar-group"><div class="bar-label"><span>💧 水</span><span>弱</span></div><div class="bar-track"><div class="bar-fill water-bg" style="width:20%;"></div></div></div>
+  <div class="bar-group"><div class="bar-label"><span>🌿 木</span><span>全缺</span></div><div class="bar-track"><div class="bar-fill wood-bg" style="width:3%;"></div></div></div>
+
+  <div style="margin-top:24px;">
+    <table class="info-table">
+      <thead><tr><th></th><th>五行</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--accent);">用神</td><td>金（印星）</td><td>生扶日主，调候润局</td></tr>
+        <tr><td style="color:var(--safe);">喜神</td><td>水（比劫）</td><td>帮身担财</td></tr>
+        <tr><td style="color:var(--danger);">忌神</td><td>火（财星）</td><td>耗身太过</td></tr>
+        <tr><td style="color:var(--danger);">忌神</td><td>土（官杀）</td><td>克水且生火</td></tr>
+        <tr><td style="color:var(--text-dim);">闲神</td><td>木（食伤）</td><td>通关水火，但原局全缺</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight">
+    <strong>格局：正印格</strong>（《子平真诠》——月令酉金，本气辛金为正印）<br>
+    月柱己酉官印相生，是全盘最漂亮的一柱。意味着：上级 / 平台 / 规矩 → 帮您变成证书和能力 → 再帮您成长。适合大平台，不适合单打独斗。
+  </div>
+
+  <div class="highlight gold">
+    <strong>五行缺木的深层影响</strong><br>
+    命局完全没有木。木代表创造力、表达、休闲放松。您很难真正放松下来，不会"玩"，一闲下来反而焦虑，心里有话说不出口。—— 需刻意培养放松的爱好，不然壬子大运水一来木更缺，容易压抑。
+    <span class="src">——《穷通宝典》论壬水生于酉月："八月辛金司权，金白水清，忌土之浊。"</span>
+  </div>
+</section>
+
+<!-- ═══ 本命天赋 ═══ -->
+<section id="talent">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(184,176,126,0.12);color:var(--metal);">⭐</div>
+    <h2>本命天赋</h2>
+    <span class="tag">学者型分析家</span>
+  </div>
+
+  <div class="card">
+    <h3>您最核心的天赋是"印 · 水 · 火"三个字的组合</h3>
+
+    <p><strong>一、正印格 + 酉金当令 → 学术型大脑</strong><br>
+    月令酉金正印是全局用神，也是天赋发动机。正印格的人有一个别人很难模仿的能力：<strong>把复杂的东西系统化地吃透。</strong>不是小聪明，是"坐得住、啃得动、理得清"。别人学东西靠记，您靠理解背后的逻辑。数据分析这条路，就是在用这个天赋。</p>
+
+    <p><strong>二、壬水日主 → 流动性思维</strong><br>
+    壬水是江河奔流之水，不是池塘死水。您的思维有流动性和穿透力——能从一个点顺流而下串联到另一个点，看到别人看不到的关联。换成数据分析，就是"从数据中发现 pattern"的能力。</p>
+
+    <p><strong>三、三午火 → 直觉爆点</strong><br>
+    三午火虽然烧得您难受，但也给了您一个隐藏天赋：<strong>直觉极强。</strong>有时候脑子还没想明白，心里已经有答案了。"莫名就知道"的能力，是午火（君火）自带的。三重叠加上丙火透出，直觉强度远超普通人。别人分析问题是 CPU 跑逻辑，您是 GPU 并行——逻辑+直觉双线走。</p>
+
+    <p><strong>四、官印相生 → 体制内战斗力</strong><br>
+    月柱己酉，己土正官坐在酉金正印上——官印相生。这个配置意味着：<strong>在规则之内、平台之上，您能比别人爬得快。</strong>大厂、国企、大平台，对别人是束缚，对您是梯子。</p>
+  </div>
+
+  <table class="info-table">
+    <thead><tr><th>天赋</th><th>来源</th><th>对应现实</th></tr></thead>
+    <tbody>
+      <tr><td>深度钻研</td><td>酉金正印</td><td>学术、技术攻关</td></tr>
+      <tr><td>系统思维</td><td>壬水 + 正印</td><td>数据分析、逻辑推理</td></tr>
+      <tr><td>直觉爆发</td><td>三午火</td><td>关键时刻的"灵光一闪"</td></tr>
+      <tr><td>规则内博弈</td><td>官印相生</td><td>大平台晋升通道</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    "学者型分析家——能在复杂系统里找到规律、用深度思考解决问题、关键时刻靠直觉做出正确判断。这个天赋在数据分析领域就是核心战斗力。"
+  </blockquote>
+</section>
+
+<!-- ═══ 大运排列 ═══ -->
+<section id="dayun">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(91,155,213,0.12);color:var(--water);">🔄</div>
+    <h2>大运排列</h2>
+    <span class="tag">阳年男 · 顺排 · 9岁起运</span>
+  </div>
+
+  <table class="info-table">
+    <thead><tr><th>大运</th><th>年龄</th><th>干支</th><th>天干</th><th>地支</th><th>简要</th></tr></thead>
+    <tbody>
+      <tr><td>起运前</td><td>0 – 9</td><td>己酉</td><td>正官</td><td>正印</td><td>幼年平稳，印星护身</td></tr>
+      <tr><td>第一步</td><td>10 – 19</td><td>庚戌</td><td>偏印</td><td>七杀</td><td>学业期，杀印相生</td></tr>
+      <tr style="background:rgba(59,125,216,0.08);"><td style="color:var(--accent);">▶ 第二步</td><td style="color:var(--accent);">20 – 29</td><td style="color:var(--accent);font-weight:700;">辛亥</td><td style="color:var(--accent);">正印</td><td style="color:var(--accent);">比肩</td><td style="color:var(--accent);">← 当前大运 ←</td></tr>
+      <tr><td>第三步</td><td>30 – 39</td><td>壬子</td><td>比肩</td><td>劫财</td><td>黄金十年，身强能担财</td></tr>
+      <tr><td>第四步</td><td>40 – 49</td><td>癸丑</td><td>劫财</td><td>正官</td><td>守成十年，丑午相害</td></tr>
+      <tr><td>第五步</td><td>50 – 59</td><td>甲寅</td><td>食神</td><td>食神</td><td>财富高峰，食神生财</td></tr>
+      <tr><td>第六步</td><td>60 – 69</td><td>乙卯</td><td>伤官</td><td>伤官</td><td>晚运清闲，卯酉冲</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <strong>大运计算说明</strong><br>
+    年柱壬午，壬为阳干 → 阳年男命 → 大运顺排。<br>
+    出生日 2002年9月11日，顺数到下一个"节"寒露（2002年10月8日），间隔约 27 天 ÷ 3 = <strong>9 岁起运</strong>。<br>
+    每步大运管十年，交接点前后一两年为过渡期，变动较大。
+  </div>
+</section>
+
+<!-- ═══ 人生阶段 ═══ -->
+<section id="life-stages">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(201,169,110,0.12);color:var(--gold);">🗺️</div>
+    <h2>人生阶段全景规划</h2>
+    <span class="tag">先学 · 后赚 · 再守 · 最后收</span>
+  </div>
+
+  <div class="timeline">
+    <div class="stage current">
+      <div class="dot"></div>
+      <h3>▶ 现在 — 29 岁：辛亥大运 · 打地基</h3>
+      <div class="meta">辛金正印 + 亥水禄地 | 老天给的学习窗口</div>
+      <p>财多身弱，印星是唯一的解药。这一步大运辛金正印生身、亥水为壬水禄地——正是"充电"的最佳时机。别人赚钱您学习，看起来落后，实际上是在补命局最大的短板。</p>
+      <div class="badge-row">
+        <span class="chip">学 SQL + Python + BI 工具</span>
+        <span class="chip">2028 年前拿硬证书</span>
+        <span class="chip">2027-2028 入行数据分析</span>
+        <span class="chip">固化生活习惯体系</span>
+      </div>
+      <p style="margin-top:10px;color:var(--accent);"><strong>核心策略：沉下去学，别飘。技术不到手，后面金山来了也接不住。</strong></p>
+    </div>
+
+    <div class="stage">
+      <div class="dot"></div>
+      <h3>30 — 39 岁：壬子大运 · 黄金十年</h3>
+      <div class="meta">壬水比肩 + 子水劫财 | 身强担财，收入爆发</div>
+      <p>日主从未如此强旺，终于能担起命局里那三午烈火之财。事业明显上升，收入跳涨，自信心大增。身边"朋友""机会"突然变多，但劫财到位也意味着分钱的人来了。</p>
+      <div class="badge-row">
+        <span class="chip">技术上钻深或带小团队</span>
+        <span class="chip">攒第一桶金</span>
+        <span class="chip">可考虑结婚（30岁后）</span>
+        <span class="chip">筛选人脉、学会说不</span>
+      </div>
+      <p style="margin-top:10px;color:var(--safe);"><strong>核心策略：赚了存住，别赌。您命局不配杠杆，配的是技术积累+慢钱。</strong></p>
+    </div>
+
+    <div class="stage">
+      <div class="dot"></div>
+      <h3>40 — 49 岁：癸丑大运 · 守成</h3>
+      <div class="meta">癸水劫财 + 丑土正官 | 丑午相害，财有破损</div>
+      <p>运势下行阶段，壬子运积累的东西可能被消耗。丑午相害直接冲击财星和婚姻宫。</p>
+      <div class="badge-row">
+        <span class="chip">锁住 70% 资产</span>
+        <span class="chip">守住主业，别创业</span>
+        <span class="chip">注意夫妻关系</span>
+        <span class="chip">不做任何重大职业转换</span>
+      </div>
+      <p style="margin-top:10px;"><strong>核心策略就一个字：守。</strong></p>
+    </div>
+
+    <div class="stage">
+      <div class="dot"></div>
+      <h3>50 — 59 岁：甲寅大运 · 收获与自由</h3>
+      <div class="meta">甲木食神 + 寅木食神 | 食神生财，一生财富最高点</div>
+      <p>木终于来了！通关水火，创造力爆发。收入渠道多元化。别人50岁在等退休，您50岁才真正开始自由——靠脑子、靠经验、靠嘴皮子就能赚钱，想干就接，不想干就歇。</p>
+      <div class="badge-row">
+        <span class="chip">从一线转向顾问/培训</span>
+        <span class="chip">前面存的现在变现</span>
+        <span class="chip">培养爱好（补一辈子的木）</span>
+      </div>
+      <p style="margin-top:10px;color:var(--gold-light);"><strong>核心策略：前面守住的，现在收获。但别完全停下来——手上有一两件事锚住注意力，自刑才不会反噬。</strong></p>
+    </div>
+
+    <div class="stage">
+      <div class="dot"></div>
+      <h3>60 岁以后：乙卯大运 · 清闲</h3>
+      <div class="meta">乙木伤官 + 卯木伤官 | 卯酉冲母宫</div>
+      <p>伤官主清高、独处、精神追求。晚年会是一个有智慧的长者。但卯酉冲月柱母宫，有些事别留遗憾。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2026 流年 ═══ -->
+<section id="current-year">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(212,115,74,0.12);color:var(--fire);">📅</div>
+    <h2>2026 丙午年 · 流年分析</h2>
+  </div>
+
+  <div class="card">
+    <h3>丙午年 × 辛亥大运</h3>
+    <p><strong>丙午</strong>——丙火偏财 + 午火正财，财星极旺之年。</p>
+    <p><strong>大运为辛亥（水金），流年为丙午（火），水火交战。</strong>大运本身利学业，但流年火旺偏财透出，容易因经济压力/赚钱冲动分心。您辞职转行本质上就是"丙火偏财"（求变求财）的体现。</p>
+    <p>今年财旺，经济上的压力和动力并存。火旺克金（印星受制），学东西容易浮躁。最大的风险不是学不会，是半途又去追别的风口。</p>
+  </div>
+
+  <div class="highlight warn">
+    <strong>今年最需要注意的</strong><br>
+    1. 别因为"没钱"焦虑而乱做决定。<br>
+    2. 选一个方向扎下去：SQL + Python + 一个可视化工具，三条腿站稳。<br>
+    3. 经济上能省则省，火旺之年冲动消费多。
+  </div>
+</section>
+
+<!-- ═══ 事业方向 ═══ -->
+<section id="career">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(107,168,122,0.12);color:var(--wood);">💼</div>
+    <h2>事业方向</h2>
+    <span class="tag">行业 · 方位 · 路线</span>
+  </div>
+
+  <div class="card">
+    <h3>数据分析这条路是否正确？—— 方向正确，贵在坚持</h3>
+    <p><strong>壬水日主，水主智。</strong>水行人思维灵活，适合逻辑推理、流动思维的工作。数据分析本质上是"从数据中提取信息流"，五行属金水，与命局高度契合。</p>
+    <p><strong>辛亥大运是学业黄金期。</strong>辛金正印为用神，亥水为壬水禄地——这十年是人生中最适合读书学技术的时间窗口。</p>
+    <p>原局财多身弱，注定不是靠体力或简单技能就能发财。必须<strong>以印（知识、技术）为桥梁，以水（智慧）为根本</strong>，才能担起旺财。</p>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 新能源 ≠ 都是火</h3>
+    <p>新能源是个大筐，不同细分五行差很多。您之前做冷压机（电池制造环节），那是金水属性，所以待得住。</p>
+    <table class="info-table">
+      <thead><tr><th>细分领域</th><th>五行</th><th>适不适合</th></tr></thead>
+      <tbody>
+        <tr><td>光伏 / 太阳能</td><td>火（纯火）</td><td style="color:var(--danger);">✗ 最不合适</td></tr>
+        <tr><td>风电</td><td>木（风属木）</td><td>△ 一般</td></tr>
+        <tr><td style="color:var(--safe);">锂电池 / 储能 / 电池制造</td><td style="color:var(--safe);">金 + 水</td><td style="color:var(--safe);">✓ 您之前做的</td></tr>
+        <tr><td style="color:var(--safe);">氢能</td><td style="color:var(--safe);">水</td><td style="color:var(--safe);">✓ 很好</td></tr>
+        <tr><td>新能源汽车整车</td><td>金（制造）</td><td>△ 还行</td></tr>
+        <tr><td>充电桩 / 电力调度</td><td>火 + 金</td><td style="color:var(--danger);">△ 偏火</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:8px;">如果留在新能源行业做数据分析，<strong>只走电池 / 储能 / 氢能这条线，别碰光伏和电力那一端。</strong></p>
+  </div>
+
+  <div class="card">
+    <h3>最适合您的行业（数据分析岗）</h3>
+    <table class="info-table">
+      <thead><tr><th>优先级</th><th>行业</th><th>五行</th><th>具体方向</th></tr></thead>
+      <tbody>
+        <tr><td><span class="stars">★★★★★</span></td><td style="color:var(--accent);">金融 / FinTech</td><td>金水</td><td>风险分析、量化数据、信贷建模</td></tr>
+        <tr><td><span class="stars">★★★★★</span></td><td style="color:var(--accent);">供应链 / 物流</td><td>水</td><td>物流数据分析、供应链优化</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>云计算 / 互联网基础设施</td><td>金水</td><td>平台数据、运维分析</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>电信 / 通信</td><td>水</td><td>用户行为分析、网络数据</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>保险</td><td>金</td><td>精算数据、理赔分析</td></tr>
+        <tr><td><span class="stars">★★★</span></td><td>电池 / 储能制造</td><td>金水</td><td>利用已有经验，差异化定位</td></tr>
+        <tr><td><span class="stars">★★★</span></td><td>航运 / 港口 / 海洋</td><td>水</td><td>莆田靠海，地理加成</td></tr>
+        <tr><td><span class="stars">★★</span></td><td>医疗 / 医药</td><td>木</td><td>通关水火</td></tr>
+        <tr><td><span class="stars">★</span></td><td>电商 / 零售</td><td>火</td><td style="color:var(--danger);">不推荐</td></tr>
+        <tr><td><span class="stars">✗</span></td><td>娱乐 / 短视频 / 游戏</td><td>火</td><td style="color:var(--danger);">最不合适</td></tr>
+        <tr><td><span class="stars">✗</span></td><td>房地产 / 建筑</td><td>土</td><td style="color:var(--danger);">不合适</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>最佳方位</h3>
+    <table class="info-table">
+      <thead><tr><th>优先级</th><th>方位</th><th>城市举例</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td><span class="stars">★★★★★</span></td><td style="color:var(--accent);">北方</td><td style="color:var(--accent);">北京、天津</td><td>水旺之地，直接补水</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>西方</td><td>西安、成都、重庆</td><td>金旺之地，金生水</td></tr>
+        <tr><td><span class="stars">★★★</span></td><td>沿海水旺之城</td><td>上海、杭州</td><td>水旺但偏东（木），次于北和西</td></tr>
+        <tr><td><span class="stars">★★</span></td><td>本地靠海</td><td>莆田、厦门</td><td>有水气可用但不补命局</td></tr>
+        <tr><td><span class="stars">✗</span></td><td style="color:var(--danger);">南方</td><td style="color:var(--danger);">深圳、广州</td><td style="color:var(--danger);">火旺之地，火上浇油</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight green">
+    <strong>一句话建议</strong><br>
+    北京或上海的金融 / 物流 / 云计算公司做数据分析。或者退一步——电池 / 储能行业的头部公司（宁德时代、比亚迪电池），用已有的行业底子做差异化竞争。方向金+水，方位北或西，定下来，其他都好办。
+  </div>
+
+  <div style="margin-top:20px;">
+    <h3 style="color:var(--text-bright);margin-bottom:12px;font-family:'Noto Serif SC',serif;">四年学习路线</h3>
+    <table class="info-table">
+      <thead><tr><th>阶段</th><th>时间</th><th>做什么</th><th>目标</th></tr></thead>
+      <tbody>
+        <tr><td>基础期</td><td>2026</td><td>SQL + Python 入门到熟练</td><td>能独立跑通分析流程</td></tr>
+        <tr><td>项目期</td><td>2027</td><td>Kaggle / 自己找数据练手</td><td>简历上有两个能说的项目</td></tr>
+        <tr><td>入行期</td><td>2028</td><td>申金到位，事业运抬头，投简历</td><td>正式入行第一份数据分析岗</td></tr>
+        <tr><td>深耕期</td><td>2029</td><td>行业深耕，技术精进</td><td>站稳岗位，准备迎接壬子大运</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 考证规划 ═══ -->
+<section id="certificates">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(201,169,110,0.12);color:var(--gold);">🎓</div>
+    <h2>考证规划</h2>
+    <span class="tag">2028 考运最强 · 别浪费</span>
+  </div>
+
+  <div class="card">
+    <h3>为什么 2028 年考运最强</h3>
+    <p>2028 年是 <strong>戊申年</strong>。申金是壬水的「长生」之地——这是日主真正扎根的年份。申金藏庚金偏印，跟大运辛金正印形成 <strong>双印到位</strong>，戊土七杀又生申金印星——七杀的压力转化为印星的学习力，<strong>杀印相生</strong>。</p>
+    <p>翻译：2028 年您脑子特别清楚，考试运是这辈子少有的好年份。而且申金是驿马（寅午戌马在申），那年大概率有工作变动、跳槽或拿 offer，跟考证正好衔接上。</p>
+  </div>
+
+  <div class="highlight warn">
+    <strong>⚠️ 不是让您等到 2028 年才开考</strong><br>
+    正确节奏是 2026-2027 年把入门级证书拿了（简历不空），<strong>2028 年冲含金量最高的那个</strong>。别把最好的考运浪费在低级证书上。
+  </div>
+
+  <div class="card">
+    <h3>需要考什么</h3>
+    <table class="info-table">
+      <thead><tr><th>优先级</th><th>证书</th><th>方向</th><th>难度</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><span class="stars">★★★★★</span></td><td style="color:var(--accent);">AWS / 阿里云数据分析认证</td><td>云计算 + 数据</td><td>中</td><td>金 + 水，最合命局</td></tr>
+        <tr><td><span class="stars">★★★★★</span></td><td style="color:var(--accent);">CDA 数据分析师认证</td><td>数据分析</td><td>中</td><td>国内认可度最高</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>Google Data Analytics</td><td>数据分析</td><td>中低</td><td>入门友好，2027 年前拿下</td></tr>
+        <tr><td><span class="stars">★★★★</span></td><td>PMP</td><td>项目管理</td><td>高</td><td>30 岁后考虑，先不急</td></tr>
+        <tr><td><span class="stars">★★★</span></td><td>金融类 CFA / FRM</td><td>金融</td><td>高</td><td>如果走金融数据分析路线</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>考证时间线</h3>
+    <table class="info-table">
+      <thead><tr><th>年份</th><th>做什么</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--accent);">2026-2027</td><td>拿下 Google Data Analytics 或 CDA Level 1</td><td>简历不空，为高阶证书积累基础</td></tr>
+        <tr><td style="color:var(--gold-light);font-weight:700;">2028</td><td>冲 AWS/Aliyun 数据分析 + CDA Level 2</td><td>考运最强的一年——把考运用在刀刃上</td></tr>
+        <tr><td>2029-2030</td><td>视行业方向补专项证书</td><td>如金融线就冲 CFA Level 1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight green">
+    <strong>一句话建议</strong><br>
+    2027 年前拿下 Google Data Analytics 或 CDA Level 1（简历不空）→ 2028 年冲 AWS/Aliyun 数据分析 + CDA Level 2（把考运用在刀刃上）。<br><br>
+    对您来说，<strong>证书就是第二条命</strong>——印星为用的人，证书就是敲门砖和金钟罩，别人不认您认。拿到证书之前，别买房别折腾，把钱和时间砸在印星上。
+  </div>
+</section>
+
+<!-- ═══ 财富格局 ═══ -->
+<section id="wealth">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(201,169,110,0.12);color:var(--gold);">💰</div>
+    <h2>财富格局</h2>
+  </div>
+
+  <div class="card">
+    <h3>总判：小康之上，中产偏上，大富难</h3>
+    <p>命局三午火 + 丙火透干，财星无论从数量还是透出程度来说，都是极旺的配置。这辈子<strong>不会缺钱</strong>——问题是什么时候拿到手。</p>
+  </div>
+
+  <table class="info-table">
+    <thead><tr><th>阶段</th><th>大运</th><th>财富状态</th></tr></thead>
+    <tbody>
+      <tr><td>积累期</td><td>20-29 辛亥</td><td>学习为主，收入有限</td></tr>
+      <tr><td style="color:var(--accent);">崛起期</td><td style="color:var(--accent);">30-39 壬子</td><td style="color:var(--accent);">身强能担财，收入开始爆发</td></tr>
+      <tr><td>守成期</td><td>40-49 癸丑</td><td>丑午相害，防破财</td></tr>
+      <tr><td style="color:var(--gold-light);">收获期</td><td style="color:var(--gold-light);">50-59 甲寅</td><td style="color:var(--gold-light);">食神生财，一生财富最高点</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight warn" style="margin-top:16px;">
+    <strong>关键风险提醒</strong><br>
+    壬子大运赚到钱之后，别投不熟悉的领域。到了癸丑大运丑午相害，财有破损之象，乱投资会吐回去。<strong>规则：壬子运赚的钱，到了癸丑运锁住 70% 别动。</strong>
+  </div>
+</section>
+
+<!-- ═══ 身体健康 ═══ -->
+<section id="health">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(200,86,64,0.12);color:var(--danger);">⚕️</div>
+    <h2>身体健康</h2>
+    <span class="tag">火旺水弱 · 肾水不足</span>
+  </div>
+
+  <div class="card">
+    <h3>命理根源</h3>
+    <p>壬水日主被三午烈火 + 丙火透干煎烤，水弱肾气不足。肾开窍于耳，肾主骨生髓通于脑，肾司二便——您的<strong>听力下降、精力差、脑子卡、尿频</strong>，根源是同一个问题：<strong>火旺水弱，肾气不固</strong>。</p>
+  </div>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div>
+      <h3 style="color:var(--text-bright);font-size:0.95rem;margin-bottom:8px;">核心表现</h3>
+      <ul class="checklist">
+        <li><span class="num">1</span> 脑子卡、思维不清晰（印星被火克）</li>
+        <li><span class="num">2</span> 精力差、续航短、容易累（壬水被火耗）</li>
+        <li><span class="num">3</span> 听力下降（肾开窍于耳）</li>
+        <li><span class="num">4</span> 尿频（肾司二便，肾气不固）</li>
+        <li><span class="num">5</span> 三午自刑——内耗大</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--text-bright);font-size:0.95rem;margin-bottom:8px;">好转节点</h3>
+      <ul class="checklist">
+        <li><span class="num">1</span> 2027下半年——脑子变清楚</li>
+        <li><span class="num">2</span> 2028戊申年——精力明显回升</li>
+        <li><span class="num">3</span> 30岁壬子大运——整体上台阶</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 生活习惯 ═══ -->
+<section id="habits">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(90,158,111,0.12);color:var(--safe);">🌅</div>
+    <h2>生活习惯体系</h2>
+    <span class="tag">补水 · 制火 · 固精</span>
+  </div>
+
+  <div class="highlight">
+    <strong>核心理念</strong><br>
+    您的身体就像一口快烧干的锅。三件事：<strong>加水（补肾）、关小火（制火）、别让锅漏（固精）。</strong>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>每日必须</h3>
+    <table class="info-table">
+      <thead><tr><th>时间</th><th>做什么</th><th>为什么</th></tr></thead>
+      <tbody>
+        <tr><td>起床</td><td>一杯温水，慢慢喝</td><td>一夜火烤，先补水</td></tr>
+        <tr><td>早晚</td><td>搓热双手，上下搓后腰各 100 下</td><td>温肾俞，固肾气</td></tr>
+        <tr><td>学习</td><td>45 分钟停一次，起来走动喝水</td><td>您不是耐力型，别硬撑</td></tr>
+        <tr><td>午间</td><td>午饭七分饱，饭后别马上坐下</td><td>脾土生火，吃撑火更旺</td></tr>
+        <tr><td>睡前</td><td>22:30 上床，23:00 前必须睡着</td><td>子时补水窗口，错过白过一天</td></tr>
+        <tr><td>随时</td><td>提肛（累计每天 100 次以上）</td><td>固肾缩尿，零成本</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>耳窍专项（每天坚持）</h3>
+    <table class="info-table">
+      <thead><tr><th>动作</th><th>怎么做</th><th>频次</th></tr></thead>
+      <tbody>
+        <tr><td>鸣天鼓</td><td>双掌心捂住耳朵，手指叩后脑勺，听到咚咚声</td><td>早晚各 36 下</td></tr>
+        <tr><td>搓耳轮</td><td>双手搓热，上下搓整个耳朵到发红发热</td><td>每天 2-3 次</td></tr>
+        <tr><td>吞口水</td><td>嘴巴闭紧，舌头搅动口腔生津，分三口咽下</td><td>随时随地</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:0.85rem;color:var(--text-dim);">这三样专门通耳窍，不花一分钱。但如果之前工厂有长期噪音暴露，建议去耳鼻喉科做纯音测听，排除噪音性听力损伤。</p>
+  </div>
+
+  <div class="card">
+    <h3>憋尿练习 + 小便固肾法</h3>
+    <p>白天有尿意别马上去，稍微憋几分钟再去——不是在练膀胱容量，是在练肾的固摄能力。别憋到疼。</p>
+    <p><strong>小便时别说话，咬紧牙关，脚趾抓地。</strong>道家养生法，便时开泄，咬紧牙关能固肾气不外泄。</p>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-card"><h4>✓ 适合的运动</h4><ul><li>游泳（最好）</li><li>散步</li><li>八段锦</li></ul></div>
+    <div class="dont-card"><h4>✗ 不适合的运动</h4><ul><li>剧烈暴汗训练</li><li>长时间跑步</li><li>高强度健身</li></ul></div>
+  </div>
+</section>
+
+<!-- ═══ 饮食 ═══ -->
+<section id="diet">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(107,168,122,0.12);color:var(--wood);">🍽️</div>
+    <h2>饮食体系</h2>
+  </div>
+
+  <div class="card">
+    <h3>常吃（补水补肾）</h3>
+    <p>黑豆、黑芝麻、黑米、桑葚、黑木耳（黑色入肾属水）</p>
+    <p>芡实（固肾缩尿，专门对尿频）、核桃（每天 2-3 个）、海带、紫菜</p>
+    <p>猪肉、鸭肉、鱼肉（水属性肉食）</p>
+  </div>
+
+  <div class="card">
+    <h3>日常茶饮</h3>
+    <p><strong>主方：</strong>十几粒枸杞 + 两三朵菊花 + 两三片西洋参，温水冲泡，一天反复喝。<br>枸杞滋阴、菊花降火、西洋参补气养阴，一温一凉互相平衡。</p>
+    <p><strong>芡实黑豆水：</strong>芡实 + 黑豆煮水或煮粥，专门对尿频。</p>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-card"><h4>✓ 可以吃</h4><ul><li>猪肉 · 鸭肉 · 鱼肉</li><li>羊肉（适量，配凉性配菜）</li><li>银耳 · 百合 · 梨 · 蜂蜜</li></ul></div>
+    <div class="dont-card"><h4>✗ 不要吃</h4><ul><li>牛肉（丑午相害）</li><li>冰水 · 冰饮料 · 冰淇淋</li><li>烧烤 · 火锅 · 麻辣</li><li>陈皮（辛温燥湿）</li><li>生冷水果过量</li></ul></div>
+  </div>
+</section>
+
+<!-- ═══ 配饰 ═══ -->
+<section id="accessories">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(184,176,126,0.12);color:var(--metal);">💎</div>
+    <h2>配饰与穿着</h2>
+  </div>
+
+  <table class="info-table">
+    <thead><tr><th>物品</th><th>五行</th><th>怎么用</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--safe);">黑曜石</td><td>水</td><td>左手，补水入身；最对路</td></tr>
+      <tr><td style="color:var(--safe);">银项链</td><td>金</td><td>挂脖子，金生水</td></tr>
+      <tr><td style="color:var(--safe);">白水晶</td><td>金</td><td>右手，排浊气</td></tr>
+      <tr><td>老山檀</td><td>木+火</td><td>收着盘，别点（点火性重）</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px;">
+    <div class="do-dont">
+      <div class="do-card"><h4>✓ 穿衣颜色</h4><ul><li>黑色 · 深蓝（水）</li><li>白色 · 灰色（金）</li></ul></div>
+      <div class="dont-card"><h4>✗ 穿衣颜色</h4><ul><li>红色 · 橙色（火）</li><li>黄色 · 棕色（土）</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 内耗管理 ═══ -->
+<section id="internal-friction">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(212,115,74,0.12);color:var(--fire);">🧠</div>
+    <h2>内耗管理 · 三午自刑</h2>
+  </div>
+
+  <div class="highlight warn">
+    <strong>命局最大的暗疾：午午自刑，三重叠加</strong><br>
+    年、日、时三柱地支全是午火——自刑的意思是<strong>自己折磨自己</strong>。一件事明明过去了，半夜还会翻出来反复想；做决定前先打八百个回合；别人一句无心的话，您能琢磨一整天。
+    <span class="src">——《三命通会》："自刑者，自寻烦恼，心中交战。"</span>
+  </div>
+
+  <div class="card">
+    <h3>解法</h3>
+    <p><strong>1. 冥想是必修课。</strong>每天 5 分钟，定闹钟，只关注呼吸。鼻子吸气 4 秒 → 憋住 4 秒 → 嘴巴慢慢吐气 6 秒。脑子跑偏了拉回来，别责怪自己。坚持两周再加到 10 分钟。</p>
+    <p><strong>2. 用"做"代替"想"。</strong>一件事摸清楚 30% 就动手，剩下的 70% 在做的过程中修正。您不需要更多信息，您需要开始。</p>
+    <p><strong>3. 少刷短视频。</strong>火代表视觉刺激、快节奏信息。您本来就火旺，刷短视频等于一直往命局加火，脑子越来越卡。</p>
+  </div>
+</section>
+
+<!-- ═══ 感情婚姻 ═══ -->
+<section id="relationships">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(212,115,74,0.12);color:var(--fire);">💕</div>
+    <h2>感情婚姻</h2>
+  </div>
+
+  <div class="card">
+    <h3>命盘信号</h3>
+    <p><strong>妻宫伏吟。</strong>日支妻宫为午，年支、时支跟日支完全一样，"伏吟"意味着重复、循环。谈的对象容易是同一种类型，感情中遇到的问题容易反复出现，跟父亲的关系模式会复刻到跟伴侣的关系上。</p>
+    <p><strong>三午入妻宫，妻星重重。</strong>妻星多不是桃花旺，是感情反复、容易在同一个坑里跌倒两次三次。</p>
+  </div>
+
+  <div class="highlight warn">
+    <strong>铁律：30 岁以前不要结婚</strong><br>
+    可以谈，但不领证、不定死。等到壬子大运根基起来之后，选的人会比现在对得多。晚婚是您主动规避感情坎坷的最有效方式。
+  </div>
+
+  <div class="highlight gold">
+    <strong>选人标准就一条：情绪稳定。</strong><br>
+    您自刑三重叠，对方情绪不稳定等于火上浇油。找一个安静、稳得住的人，比找一个"有感觉"的人重要十倍。
+  </div>
+</section>
+
+<!-- ═══ 玄学天赋 ═══ -->
+<section id="metaphysics">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(184,176,126,0.12);color:var(--metal);">🔮</div>
+    <h2>玄学天赋</h2>
+  </div>
+
+  <div class="card">
+    <h3>不是天才型，但适合学，有条件学好</h3>
+    <p><strong>正面信号：</strong>酉金正印在月令——能啃古籍、吃透理论；三个午火——火主神明，直觉不弱；壬水日主——水主智，思维有灵性。</p>
+    <p><strong>缺什么：</strong>缺华盖星、缺偏印。不是那种天生通灵、一眼能看出东西的人。</p>
+    <p><strong>您的优势：</strong>正印格——学霸型配置。别人学玄学靠感觉、靠天眼，您靠啃书。真正功夫在古籍里（穷通、滴天髓、渊海子平），全是需要静心研读的，正印格刚好匹配。三个午火给了您直觉——有时候脑子没反应过来，心里已经知道了。</p>
+  </div>
+</section>
+
+<!-- ═══ 家庭 ═══ -->
+<section id="family">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(91,155,213,0.12);color:var(--water);">👨‍👩‍👧</div>
+    <h2>家庭建议</h2>
+  </div>
+
+  <div class="family-grid">
+    <div class="family-card">
+      <h3>👩 母亲 — 最需要关注的人</h3>
+      <p><strong>对应月支酉金（正印），是您命盘最大的贵人。</strong>但这个酉金正被三个午火合力克制——三把火烧一块金。</p>
+      <p><strong>健康：</strong>呼吸道、肺部、皮肤是薄弱点。关键年份：每一个午年（尤其是 2026 丙午年），秋冬季注意保暖。</p>
+      <p><strong>立即行动：</strong>买加湿器 + 梨膏/银耳百合，润肺为先。您把身体养好，她最大的心事就放下了。</p>
+      <p><strong>她一直在"生"您，单向输出。走到运势好的时候，别忘了反哺。</strong></p>
+    </div>
+
+    <div class="family-card">
+      <h3>👨 父亲 — 脾气是最大隐患</h3>
+      <p><strong>对应时干丙火（偏财），火旺之极。</strong></p>
+      <p><strong>健康：</strong>心脑血管、血压、失眠。火旺的人容易上头，血压波动。</p>
+      <p><strong>性格：</strong>急脾气，说话冲，点火就着。不是针对谁，是命里火太旺，自控力跟不上火气。</p>
+      <p><strong>立即行动：</strong>买血压计，早晚各测一次——比任何补品都重要。菊花茶替代浓茶。少跟他争论，用结果说话。</p>
+    </div>
+
+    <div class="family-card">
+      <h3>👧 妹妹 — 注意体质遗传</h3>
+      <p>家族体质倾向火旺水弱，妹妹大概率有类似底子——精力不足、怕热、耳朵或肾脏偏弱。如果她年纪还小，从小养好作息、别熬夜、少吃燥热、多接触水（学游泳）。兄妹之间的支撑，比她外面找的朋友靠得住。</p>
+    </div>
+  </div>
+
+  <div class="highlight warn" style="margin-top:16px;">
+    <strong>别等失去了再后悔</strong><br>
+    酉金是命盘唯一的用神，也是母亲宫位。她现在被三午火持续消耗——不会突然倒下，但一直在被消耗。您24岁觉得来日方长，但真正有条件好好回馈她的阶段（壬子大运之后），可能她已经消耗得太多了。有些事比赚钱重要，而且等不了。
+  </div>
+</section>
+
+<!-- ═══ 避坑指南 ═══ -->
+<section id="pitfalls">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(200,86,64,0.12);color:var(--danger);">⚠️</div>
+    <h2>避坑指南</h2>
+    <span class="tag">哪些能避 · 哪些必须扛</span>
+  </div>
+
+  <table class="info-table">
+    <thead><tr><th style="color:var(--safe);">能规避</th><th>怎么避</th></tr></thead>
+    <tbody>
+      <tr><td>早婚</td><td>30 岁前不结婚，铁律</td></tr>
+      <tr><td>学一半换方向</td><td>现在就定死数据分析，不换</td></tr>
+      <tr><td>壬子运赚了钱乱投资</td><td>不投不熟的领域，谁说都不行</td></tr>
+      <tr><td>癸丑运乱辞职/创业</td><td>这十年不做任何重大职业转换</td></tr>
+      <tr><td>用想代替做</td><td>摸清 30% 就动手，在过程中修正</td></tr>
+      <tr><td>熬夜伤身</td><td>23:00 前睡着，不是躺下，是睡着</td></tr>
+      <tr><td>跟错人合作</td><td>画饼的不跟、借钱的不借</td></tr>
+    </tbody>
+  </table>
+
+  <table class="info-table" style="margin-top:16px;">
+    <thead><tr><th style="color:var(--fire);">避不掉，只能管理</th><th>怎么管</th></tr></thead>
+    <tbody>
+      <tr><td>自刑内耗</td><td>每天 5 分钟冥想 + 想到先动手</td></tr>
+      <tr><td>壬子运的子午冲</td><td>大事睡一觉再决定，别当天拍板</td></tr>
+      <tr><td>癸丑运运势下行</td><td>锁资产、守主业、不折腾</td></tr>
+      <tr><td>感情上反复遇到同类型</td><td>有意识破循环，选情绪稳定的人</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ 人生曲线 ═══ -->
+<section id="life-curve">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(201,169,110,0.12);color:var(--gold);">📈</div>
+    <h2>人生曲线 · 你与他们相反</h2>
+  </div>
+
+  <div class="card">
+    <h3>大多数人：前高后低</h3>
+    <p>30-40 岁巅峰，精力好、加班拼、升职加薪。到 50 岁体力下滑、思维固化、公司嫌你贵、年轻人追上来，掰手指倒数退休。</p>
+  </div>
+
+  <div class="card">
+    <h3>您：前低后高</h3>
+    <p>20-29 岁在学、在补短板、看起来落后。30 岁站稳、开始发力。40 岁守成、韬光养晦。<strong>50 岁甲寅食神生财——靠脑子、靠经验、靠嘴皮子赚钱，别人等退休，您刚开始自由。</strong></p>
+  </div>
+
+  <blockquote>
+    "他们年轻的时候跑在您前面，50 岁以后您从另一条跑道超过去——而且您不用跑了，您在散步，他们在爬。"
+  </blockquote>
+
+  <div style="text-align:center;padding:20px 0;font-size:0.88rem;color:var(--text-dim);overflow-x:auto;">
+    <div style="display:flex;justify-content:space-between;max-width:520px;margin:0 auto;text-align:center;min-width:460px;">
+      <div><span style="display:block;color:var(--water);font-weight:600;">学习</span><span style="font-size:0.72rem;">辛亥 · 24-29</span></div>
+      <div style="color:var(--border);line-height:2;">→</div>
+      <div><span style="display:block;color:var(--accent);font-weight:600;">赚钱</span><span style="font-size:0.72rem;">壬子 · 30-39</span></div>
+      <div style="color:var(--border);line-height:2;">→</div>
+      <div><span style="display:block;color:var(--text-dim);font-weight:600;">守成</span><span style="font-size:0.72rem;">癸丑 · 40-49</span></div>
+      <div style="color:var(--border);line-height:2;">→</div>
+      <div><span style="display:block;color:var(--gold-light);font-weight:600;">收获</span><span style="font-size:0.72rem;">甲寅 · 50-59</span></div>
+      <div style="color:var(--border);line-height:2;">→</div>
+      <div><span style="display:block;color:var(--text-dim);font-weight:600;">清闲</span><span style="font-size:0.72rem;">乙卯 · 60+</span></div>
+    </div>
+  </div>
+
+  <div class="highlight gold">
+    <strong>核心节奏</strong><br>
+    先学 → 后赚 → 再守 → 最后收。<br>
+    跳过任何一步，后面的都会塌。辛亥大运这四年是地基里的地基。
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <p>命理分析仅供参考，人生在于自身的努力和选择。</p>
+  <p style="margin-top:8px;">以上属传统文化研究范畴，不作为人生决策的唯一依据。</p>
+  <p style="margin-top:16px;color:var(--gold);font-family:'Noto Serif SC',serif;">壬水遇金方成器 · 三午烈火待水济</p>
+</footer>
+
+</div><!-- /main -->
+
+<script>
+(function(){
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('menuBtn');
+  const overlay = document.getElementById('overlay');
+  const navLinks = sidebar.querySelectorAll('a');
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  menuBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+
+  overlay.addEventListener('click', closeSidebar);
+
+  navLinks.forEach(function(a) {
+    a.addEventListener('click', function() {
+      if (window.innerWidth <= 860) closeSidebar();
+    });
+  });
+
+  // Active nav highlight on scroll
+  var sections = [];
+  navLinks.forEach(function(a) {
+    var id = a.getAttribute('href');
+    if (id && id.startsWith('#')) {
+      var el = document.querySelector(id);
+      if (el) sections.push({ el: el, link: a });
+    }
+  });
+
+  function onScroll() {
+    var scrollY = window.scrollY + 80;
+    var current = null;
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    });
+    navLinks.forEach(function(a) { a.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>
